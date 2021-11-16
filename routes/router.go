@@ -18,7 +18,10 @@ func InitRouter() {
 		router.PUT("user/:id", v1.EditUser)
 		router.DELETE("user/:id", v1.DeleteUser)
 		//category model router api
-
+		router.POST("category/add", v1.AddCategory)
+		router.GET("category", v1.GetCate)
+		router.PUT("category/:id", v1.EditCate)
+		router.DELETE("category/:id", v1.DeleteCate)
 		//article model router api
 
 	}
