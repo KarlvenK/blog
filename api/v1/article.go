@@ -22,7 +22,37 @@ func AddArticle(c *gin.Context) {
 	})
 }
 
-//todo query single article
+//query all the articles below the category
+func GetCateArt(c *gin.Context) {
+	pageSize, _ := strconv.Atoi(c.Query("pagesize"))
+	pageNum, _ := strconv.Atoi(c.Query("pagenum"))
+
+	if pageSize == 0 {
+		pageSize = -1
+	}
+	if pageNum == 0 {
+		pageNum = -1
+	}
+	id, _ := strconv.Atoi(c.Param("id"))
+
+	data, code := model.GetCateArt(id, pageSize, pageNum)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    data,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+//query single article
+func GetArtInfo(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	data, code := model.GetArtInfo(id)
+	c.JSON(http.StatusOK, gin.H{
+		"status":  code,
+		"data":    data,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
 
 //search cate list
 func GetArt(c *gin.Context) {
@@ -35,8 +65,7 @@ func GetArt(c *gin.Context) {
 	if pageNum == 0 {
 		pageNum = -1
 	}
-	data := model.GetCate(pageSize, pageNum)
-	code = errmsg.SUCCESS
+	data, code := model.GetArt(pageSize, pageNum)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  code,
 		"data":    data,

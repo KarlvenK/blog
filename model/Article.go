@@ -6,7 +6,7 @@ import (
 )
 
 type Article struct {
-	Category Category
+	Category Category `gorm:"foreignkey:Cid"`
 	gorm.Model
 	Title   string `gorm:"type:varchar(100);not null" json:"title"`
 	Cid     int    `gorm:"type:int;not null" json:"cid"`
@@ -25,17 +25,34 @@ func CreateArt(data *Article) int {
 	return errmsg.SUCCESS
 }
 
-//todo Query all the articles below the category
-//todo Query single article
-
-//todo Query article list
-func GetArt(pageSize int, pageNumber int) []Category {
-	var cate []Category
-	err = db.Limit(pageSize).Offset((pageNumber - 1) * pageSize).Find(&cate).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil
+//Query all the articles below the category
+func GetCateArt(id int, pageSize int, pageNumber int) ([]Article, int) {
+	var cateArtList []Article
+	err := db.Preload("Category").Limit(pageSize).Offset((pageNumber-1)*pageSize).Where("cid = ?", id).Find(&cateArtList).Error
+	if err != nil {
+		return nil, errmsg.ERROR_CATE_NOT_EXIST
 	}
-	return cate
+	return cateArtList, errmsg.SUCCESS
+}
+
+//Query single article
+func GetArtInfo(id int) (Article, int) {
+	var art Article
+	err := db.Preload("Category").Where("id = ?", id).First(&art).Error
+	if err != nil {
+		return art, errmsg.ERROR_ART_NOT_EXIST
+	}
+	return art, errmsg.SUCCESS
+}
+
+//Query article list
+func GetArt(pageSize int, pageNumber int) ([]Article, int) {
+	var articleList []Article
+	err = db.Preload("Category").Limit(pageSize).Offset((pageNumber - 1) * pageSize).Find(&articleList).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, errmsg.ERROR
+	}
+	return articleList, errmsg.SUCCESS
 }
 
 //Edit article
