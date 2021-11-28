@@ -10,9 +10,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"type:varchar(20);not null" json:"username"`
-	PassWord string `gorm:"type:varchar(500);not null" json:"password"`
-	Role     int    `gorm:"type:int" json:"role"`
+	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=12"`
+	PassWord string `gorm:"type:varchar(500);not null" json:"password" validate:"required,min=6,max=20"`
+	Role     int    `gorm:"type:int;DEFAULT:2" json:"role" validate:"required,gte=2"`
 }
 
 //Check if user exists
@@ -97,7 +97,7 @@ func CheckLogin(username, password string) int {
 	if ScryptPw(password) != user.PassWord {
 		return errmsg.ERROR_PASSWORD_WRONG
 	}
-	if user.Role != 0 {
+	if user.Role != 1 {
 		return errmsg.ERROR_USER_NO_RIGHT
 	}
 	return errmsg.SUCCESS
