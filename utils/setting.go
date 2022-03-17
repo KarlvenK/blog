@@ -24,6 +24,10 @@ var (
 )
 
 func init() {
+	/*
+		当我们编译成二进制文件部署的时候，下面的路径应当改成 "config/config.ini"
+		因为此时二进制文件和config文件夹同一级
+	*/
 	file, err := ini.Load("../config/config.ini")
 	if err != nil {
 		fmt.Println("config file loading failed, check the file path:", err)
