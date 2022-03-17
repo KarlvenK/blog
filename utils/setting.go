@@ -24,7 +24,7 @@ var (
 )
 
 func init() {
-	file, err := ini.Load("config/config.ini")
+	file, err := ini.Load("../config/config.ini")
 	if err != nil {
 		fmt.Println("config file loading failed, check the file path:", err)
 	}
@@ -43,8 +43,8 @@ func LoadData(file *ini.File) {
 	Db = file.Section("database").Key("Db").MustString("mysql")
 	DbHost = file.Section("database").Key("DbHost").MustString("localhost")
 	DbPort = file.Section("database").Key("DbPort").MustString("3306")
-	DbUser = file.Section("database").Key("DbUser").MustString("root")
-	DbPassWord = file.Section("database").Key("DbPassWord").MustString("abc12345")
+	DbUser = file.Section("database").Key("DbUser").MustString("unknow user")
+	DbPassWord = file.Section("database").Key("DbPassWord").MustString("no password setting")
 	DbName = file.Section("database").Key("DbName").MustString("blog")
 }
 
